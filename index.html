@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assistant</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    body { background: #f5f5f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1rem; }
+    .chat-box { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 480px; display: flex; flex-direction: column; overflow: hidden; }
+    .chat-header { background: #1a1a1a; color: white; padding: 1rem 1.25rem; font-size: 15px; font-weight: 500; }
+    .chat-header span { font-size: 12px; opacity: 0.6; display: block; margin-top: 2px; }
+    .chat-window { padding: 1rem; display: flex; flex-direction: column; gap: 10px; min-height: 380px; max-height: 420px; overflow-y: auto; }
+    .msg { max-width: 80%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.5; }
+    .msg.bot { background: #f0f0f0; color: #1a1a1a; align-self: flex-start; border-bottom-left-radius: 4px; }
+    .msg.user { background: #1a1a1a; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .msg.loading { color: #999; font-style: italic; }
+    .chat-footer { display: flex; gap: 8px; padding: 1rem; border-top: 1px solid #eee; }
+    input { flex: 1; padding: 10px 14px; border-radius: 24px; border: 1px solid #ddd; font-size: 14px; outline: none; }
+    button { background: #1a1a1a; color: white; border: none; border-radius: 24px; padding: 10px 18px; font-size: 14px; cursor: pointer; }
+  </style>
+</head>
+<body>
+<div class="chat-box">
+  <div class="chat-header">
+    COMMERCE_NOM
+    <span>Assistant virtuel — disponible 24h/24</span>
+  </div>
+  <div class="chat-window" id="chat-window">
+    <div class="msg bot">Bonjour ! Je suis l'assistant de COMMERCE_NOM. Comment puis-je vous aider ?</div>
+  </div>
+  <div class="chat-footer">
+    <input type="text" id="input" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter') send()" />
+    <button onclick="send()">Envoyer</button>
+  </div>
+</div>
+
+<script>
+  const SYSTEM = `Tu es l'assistant virtuel de COMMERCE_NOM, un(e) COMMERCE_TYPE.
+Reponds uniquement aux questions liees a ce commerce, de facon courte et polie en francais.
+Horaires : COMMERCE_HORAIRES
+Adresse : COMMERCE_ADRESSE
+Services et tarifs : COMMERCE_SERVICES
+Infos supplementaires : COMMERCE_EXTRA
+Si tu ne sais pas, dis de contacter directement le commerce.`;
+
+  const history = [];
+
+  async function send() {
+    const input = document.getElementById('input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    addMsg('user', text);
+    const loading = addMsg('bot loading', 'En train de répondre...');
+    history.push({ role: 'user', content: text });
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history, system: SYSTEM })
+      });
+      const data = await res.json();
+      const reply = data.reply || 'Désolé, je n\'ai pas pu répondre.';
+      history.push({ role: 'assistant', content: reply });
+      loading.className = 'msg bot';
+      loading.textContent = reply;
+    } catch(e) {
+      loading.className = 'msg bot';
+      loading.textContent = 'Erreur de connexion, veuillez réessayer.';
+    }
+    document.getElementById('chat-window').scrollTop = 9999;
+  }
+
+  function addMsg(cls, text) {
+    const win = document.getElementById('chat-window');
+    const div = document.createElement('div');
+    div.className = 'msg ' + cls;
+    div.textContent = text;
+    win.appendChild(div);
+    win.scrollTop = 9999;
+    return div;
+  }
+</script>
+</body>
+</html>
