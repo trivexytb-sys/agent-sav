@@ -6,7 +6,7 @@ module.exports = async function handler(req, res) {
   const { messages, system } = req.body;
   
   const body = JSON.stringify({
-    model: 'claude-haiku-20240307',
+    model: 'claude-haiku-4-5-20251001',
     max_tokens: 500,
     system: system,
     messages: messages
@@ -32,7 +32,8 @@ module.exports = async function handler(req, res) {
         response.on('end', () => {
           try {
             const parsed = JSON.parse(data);
-            resolve(parsed.content?.[0]?.text || 'Pas de réponse.');
+            console.log('API response:', JSON.stringify(parsed));
+            resolve(parsed.content?.[0]?.text || parsed.error?.message || JSON.stringify(parsed));
           } catch {
             reject(new Error('Parse error'));
           }
