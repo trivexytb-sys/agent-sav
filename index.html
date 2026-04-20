@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Assistant</title>
+  <title>L&A Coiffure Fribourg</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
     body { background: #f5f5f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1rem; }
@@ -23,11 +23,11 @@
 <body>
 <div class="chat-box">
   <div class="chat-header">
-    Trivex Hub
+    L&A Coiffure Fribourg
     <span>Assistant virtuel — disponible 24h/24</span>
   </div>
   <div class="chat-window" id="chat-window">
-    <div class="msg bot">Bonjour ! Je suis l'assistant de Trivex Hub. Comment puis-je vous aider ?</div>
+    <div class="msg bot">Bonjour ! Je suis l'assistant de L&A Coiffure. Comment puis-je vous aider ?</div>
   </div>
   <div class="chat-footer">
     <input type="text" id="input" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter') send()" />
@@ -36,13 +36,14 @@
 </div>
 
 <script>
-  const SYSTEM = `Tu es l'assistant virtuel de Trivex Hubs, un(e) COMMERCE_TYPE.
-Reponds uniquement aux questions liees a ce commerce, de facon courte et polie en francais.
-Horaires : COMMERCE_HORAIRES
-Adresse : COMMERCE_ADRESSE
-Services et tarifs : COMMERCE_SERVICES
-Infos supplementaires : COMMERCE_EXTRA
-Si tu ne sais pas, dis de contacter directement le commerce.`;
+  const SYSTEM = `Tu es l'assistant virtuel de L&A Coiffure, un salon de coiffure situé à Fribourg en Suisse.
+Réponds uniquement aux questions liées à ce salon, de façon courte, polie et professionnelle en français.
+Horaires : Mardi au vendredi 9h-18h30, Samedi 8h30-16h, fermé lundi et dimanche.
+Adresse : Boulevard de Pérolles 22, 1700 Fribourg. Proche du centre-ville.
+Téléphone : +41 79 438 08 83
+Services et tarifs : Coupe femme, balayage, coloration, brushing. Tarifs sur demande ou par téléphone.
+Infos supplémentaires : Salon très bien noté avec plus de 200 avis positifs. Spécialiste en coloration et balayage naturel. Réservation recommandée par téléphone.
+Si tu ne sais pas, invite poliment à appeler le +41 79 438 08 83.`;
 
   const history = [];
 
